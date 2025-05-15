@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+
+    :root {
+        --color-1: #CC0066;
+        --color-2: #00CC00;
+        --color-3: #00CCCC;
+        --color-4: #CC6600;
+        --color-5: #CC00CC;
+        --color-6: #CCCC00;
+        --color-7: #CC0000;
+        --color-8: #00CC66;
+        --color-9: #6600CC;
+        --color-10: #0066CC;
+    }
+
+    body {
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .genre-comparison {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+    }
+
+    .genre-box {
+        position: relative;
+        min-width: 300px;
+        min-height: 200px;
+        background: black;
+        color: white;
+        font-size: 1.5rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        box-shadow: 0 0 20px transparent;
+    }
+
+    .genre-box::before {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border-radius: 12px;
+        border: 3px solid;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+
+    .genre-box:nth-of-type(1)::before { border-color: var(--color-1); }
+    .genre-box:nth-of-type(2)::before { border-color: var(--color-2); }
+
+    .genre-box:nth-of-type(1) { box-shadow: 0 0 20px var(--color-1); }
+    .genre-box:nth-of-type(2) { box-shadow: 0 0 20px var(--color-2); }
+
+    .genre-box:hover, .genre-box:focus {
+        transform: scale(1.15);
+        outline: none;
+        box-shadow: 0 0 20px black;
+    }
+
+    .genre-box:nth-of-type(1):hover, .genre-box:nth-of-type(1):focus {
+        background: var(--color-1);
+        color: black;
+    }
+
+    .genre-box:nth-of-type(2):hover, .genre-box:nth-of-type(2):focus {
+        background: var(--color-2);
+        color: black;
+    }
+
+    .genre-box:hover::before, .genre-box:focus::before {
+        border-color: black;
+    }
+
+    .progress {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-size: 1.2rem;
+        color: white;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<div class="container">
+    <h1 class="text-4xl md:text-6xl font-bold mb-8 text-white">Which genre do you prefer?</h1>
+    <div class="progress">
+        Progress: {{ current_comparison }}/{{ total_comparisons }}
+    </div>
+    
+    <div class="genre-comparison">
+        <button onclick="vote('{{ genre1 }}', '{{ genre2 }}')" class="genre-box">
+            {{ genre1 }}
+        </button>
+        
+        <button onclick="vote('{{ genre2 }}', '{{ genre1 }}')" class="genre-box">
+            {{ genre2 }}
+        </button>
+    </div>
+</div>
+
+<script>
+function vote(winner, loser) {
+    // Disable both buttons to prevent double clicks
+    document.querySelectorAll('.genre-box').forEach(button => {
+        button.disabled = true;
+        button.style.opacity = '0.7';
+        button.style.cursor = 'wait';
+    });
+
+    fetch('/vote', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            winner: winner,
+            loser: loser
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.redirect) {
+            window.location.href = data.redirect;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Re-enable buttons if there's an error
+        document.querySelectorAll('.genre-box').forEach(button => {
+            button.disabled = false;
+            button.style.opacity = '1';
+            button.style.cursor = 'pointer';
+        });
+    });
+}
+
+// Prevent caching to ensure session state is up-to-date
+history.pushState(null, document.title, window.location.href);
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+        World Favorites
+    </h1>
+
+    <div class="text-center mb-8">
+        <p class="text-xl text-gray-400">
+            Global rankings based on cumulative user ratings
+        </p>
+        <p class="text-sm text-gray-500 mt-2">
+            (Scores are normalized relative to starting rating of 1.0)
+        </p>
+    </div>
+
+    <div class="overflow-hidden rounded-xl border border-primary/20 backdrop-blur-sm">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-primary/20">
+                    <th class="px-6 py-4 text-left text-sm font-semibold">Rank</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold">Genre</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold">Global Score</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-primary/10">
+                {% for genre, rating in rankings %}
+                <tr class="hover:bg-primary/10 transition-colors">
+                    <td class="px-6 py-4 text-sm">{{ loop.index }}</td>
+                    <td class="px-6 py-4">
+                        <span class="font-medium">{{ genre }}</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm">
+                        {{ "%.2f"|format(rating) }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-8 text-center">
+        <a href="/select-genres" 
+           class="inline-block px-6 py-3 bg-primary hover:bg-accent transition-colors rounded-full font-bold">
+            Create Your Own Ranking
+        </a>
+    </div>
+</div>
+{% endblock %}

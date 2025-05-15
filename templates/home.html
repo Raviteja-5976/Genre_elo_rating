@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+    body {
+        font-family: 'Quicksand', sans-serif;
+    }
+    @keyframes glow {
+        0% {
+            text-shadow: 0 0 3px #ff00ff, 0 0 6px #ff00ff, 0 0 9px #ff00ff;
+        }
+        50% {
+            text-shadow: 0 0 6px #ff00ff, 0 0 12px #ff00ff, 0 0 18px #ff00ff;
+        }
+        100% {
+            text-shadow: 0 0 3px #ff00ff, 0 0 6px #ff00ff, 0 0 9px #ff00ff;
+        }
+    }
+    @keyframes mobileGlow {
+        0% {
+            text-shadow: 0 0 3px #ff00ff, 0 0 6px #ff00ff, 0 0 9px #ff00ff;
+        }
+        100% {
+            text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+        }
+    }
+    @media (max-width: 768px) {
+        .mobile-glow {
+            animation: mobileGlow 2s infinite alternate;
+        }
+    }
+    .hover-scale {
+        transition: all 0.3s ease;
+    }
+    .hover-scale:hover {
+        transform: scale(1.1);
+        border: 2px solid black;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+<section class="flex flex-col items-center justify-center h-screen w-screen fixed inset-0 p-4 text-center overflow-hidden bg-gradient-to-b from-gray-800 via-purple-600 to-gray-800">
+    <h1 class="text-5xl md:text-9xl font-bold mb-6 md:mb-10 text-black mobile-glow">
+        <span class="md:hidden">Genre<br>Elo<br>Rating</span>
+        <span class="hidden md:inline">Genre Elo Rating</span>
+    </h1>
+
+    <p class="text-lg md:text-3xl mb-4 md:mb-6 text-black max-w-sm md:max-w-2xl mx-auto font-bold">
+        Find your favorite genre and the movies based on scientific rating system
+    </p>
+
+    <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8 w-full max-w-xs md:max-w-none justify-center">
+        <a href="/select-genres" 
+           class="bg-white text-purple-700 px-6 py-2 rounded hover:bg-gray-200 w-full md:w-auto hover-scale text-xl font-bold no-underline">
+            Take Genre Elo
+        </a>
+        
+        <a href="/world-favorites" 
+           class="bg-purple-700 text-white px-6 py-2 rounded hover:bg-purple-600 w-full md:w-auto hover-scale text-xl font-bold no-underline">
+            World Favorites
+        </a>
+    </div>
+</section>
+{% endblock %}
